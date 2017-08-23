@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-public class AuthenticateSPResponse {
+public class AuthenticateResponse {
 
     private String authenticationID;
     private Date timestamp;
@@ -28,11 +28,9 @@ public class AuthenticateSPResponse {
     protected List<ItemCheckResultCodes> resultCodes;
 
 
-    public static AuthenticateSPResponse from(com.lindar.id3global.internal.vo.AuthenticateSPResponse response){
+    public static AuthenticateResponse from(GlobalResultData value){
 
-        GlobalResultData value = response.getAuthenticateSPResult().getValue();
-
-        AuthenticateSPResponse result = new AuthenticateSPResponse();
+        AuthenticateResponse result = new AuthenticateResponse();
 
         if(value.getTimestamp() != null) result.setTimestamp(value.getTimestamp().toGregorianCalendar().getTime());
         if(value.getCustomerRef() != null) result.setCustomerRef(value.getCustomerRef().getValue());
