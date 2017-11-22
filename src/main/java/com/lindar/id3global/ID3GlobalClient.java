@@ -15,7 +15,7 @@ public class ID3GlobalClient {
     private ID3GlobalClient(AccessCredentials accessCredentials){
 
 
-        WSSESecurityHeaderRequestWebServiceMessageCallback authenticationCallback = new WSSESecurityHeaderRequestWebServiceMessageCallback("***REMOVED***", "***REMOVED***");
+        WSSESecurityHeaderRequestWebServiceMessageCallback authenticationCallback = new WSSESecurityHeaderRequestWebServiceMessageCallback(accessCredentials.getUsername(), accessCredentials.getPassword());
         WebServiceTemplate webServiceTemplate = buildWebServiceTemplate();
 
         this.authenticateApi = new AuthenticateApi(accessCredentials, webServiceTemplate, authenticationCallback);
