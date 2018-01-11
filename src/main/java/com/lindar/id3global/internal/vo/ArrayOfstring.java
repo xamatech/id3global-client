@@ -8,6 +8,9 @@
 
 package com.lindar.id3global.internal.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -39,6 +42,8 @@ import java.util.List;
 @XmlType(name = "ArrayOfstring", namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays", propOrder = {
     "string"
 })
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArrayOfstring {
 
     @XmlElement(nillable = true)

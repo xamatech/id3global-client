@@ -1,12 +1,17 @@
 package com.lindar.id3global.vo.identity_documents.uk;
 
+import com.lindar.id3global.SoapUtils;
 import com.lindar.id3global.internal.vo.GlobalUKDrivingLicence;
 import com.lindar.id3global.internal.vo.ObjectFactory;
 import com.lindar.id3global.vo.SoapInterface;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Builder
 public class UKDrivingLicence implements SoapInterface<GlobalUKDrivingLicence> {
@@ -41,4 +46,24 @@ public class UKDrivingLicence implements SoapInterface<GlobalUKDrivingLicence> {
 
         return drivingLicence;
     }
+
+    public static UKDrivingLicence from(GlobalUKDrivingLicence value){
+        UKDrivingLicence result = new UKDrivingLicence();
+
+        SoapUtils.populate(value.getNumber(), result::setNumber);
+        SoapUtils.populate(value.getMailSort(), result::setMailSort);
+        SoapUtils.populate(value.getMicrofiche(), result::setMicrofiche);
+        SoapUtils.populate(value.getPostcode(), result::setPostcode);
+        SoapUtils.populate(value.getExpiryDay(), result::setExpiryDay);
+        SoapUtils.populate(value.getExpiryMonth(), result::setExpiryMonth);
+        SoapUtils.populate(value.getExpiryYear(), result::setExpiryYear);
+        SoapUtils.populate(value.getIssueDay(), result::setIssueDay);
+        SoapUtils.populate(value.getIssueMonth(), result::setIssueMonth);
+        SoapUtils.populate(value.getIssueYear(), result::setIssueYear);
+        SoapUtils.populate(value.getIssueNumber(), result::setIssueNumber);
+
+        return result;
+    }
+
+
 }

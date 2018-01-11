@@ -17,8 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AuthenticateApi {
-    private static final ObjectFactory factory = ObjectFactory.getInstance();
+public class AuthenticateApi extends BaseApi {
+
+    private static final String ENDPOINT = "/Soap11_Auth";
 
     private static final String AUTHENTICATE_SP_ACTION = "http://www.id3global.com/ID3gWS/2013/04/IGlobalAuthenticate/AuthenticateSP";
     private static final String AUTHENTICATE_MP_ACTION = "http://www.id3global.com/ID3gWS/2013/04/IGlobalAuthenticate/AuthenticateMP";
@@ -28,12 +29,8 @@ public class AuthenticateApi {
     private final WebServiceMessageCallback AUTHENTICATE_MP_CALLBACK;
     private final WebServiceMessageCallback INCREMENTAL_VERIFICATION_CALLBACK;
 
-    private final AccessCredentials accessCredentials;
-    private final WebServiceTemplate webServiceTemplate;
-
     public AuthenticateApi(AccessCredentials accessCredentials, WebServiceTemplate webServiceTemplate, WSSESecurityHeaderRequestWebServiceMessageCallback authenticationCallback) {
-        this.accessCredentials = accessCredentials;
-        this.webServiceTemplate = webServiceTemplate;
+        super(ENDPOINT, accessCredentials, webServiceTemplate);
 
         this.AUTHENTICATE_SP_CALLBACK =  new DelegatingWebServiceMessageCallback(Arrays.asList(authenticationCallback, new SoapActionCallback(AUTHENTICATE_SP_ACTION)));
         this.AUTHENTICATE_MP_CALLBACK =  new DelegatingWebServiceMessageCallback(Arrays.asList(authenticationCallback, new SoapActionCallback(AUTHENTICATE_MP_ACTION)));
@@ -43,11 +40,7 @@ public class AuthenticateApi {
     public List<AuthenticateResponse> multiAuthenticate(@NonNull String customerReference, @NonNull InputData inputData, @NonNull List<ProfileVersion> profileVersions){
         AuthenticateMP authenticateMP = buildAuthenticateMP(customerReference, inputData, profileVersions);
 
-        AuthenticateMPResponse authenticateMPResponse = (AuthenticateMPResponse) webServiceTemplate
-                .marshalSendAndReceive(accessCredentials.getApiUrl(),
-                        authenticateMP, AUTHENTICATE_MP_CALLBACK);
-
-
+        AuthenticateMPResponse authenticateMPResponse = (AuthenticateMPResponse) marshalSendAndReceive(authenticateMP, AUTHENTICATE_MP_CALLBACK);
 
         return authenticateMPResponse.getAuthenticateMPResult().getValue().getGlobalResultData().stream().map(AuthenticateResponse::from).collect(Collectors.toList());
     }
@@ -55,9 +48,7 @@ public class AuthenticateApi {
     public AuthenticateResponse singleAuthenticate(@NonNull String customerReference, @NonNull InputData inputData, @NonNull ProfileVersion profileVersion){
         AuthenticateSP authenticateSP = buildAuthenticateSP(customerReference, inputData, profileVersion);
 
-        AuthenticateSPResponse authenticateSPResponse = (AuthenticateSPResponse) webServiceTemplate
-                .marshalSendAndReceive(accessCredentials.getApiUrl(),
-                        authenticateSP, AUTHENTICATE_SP_CALLBACK);
+        AuthenticateSPResponse authenticateSPResponse = (AuthenticateSPResponse) marshalSendAndReceive(authenticateSP, AUTHENTICATE_SP_CALLBACK);
 
         return AuthenticateResponse.from( authenticateSPResponse.getAuthenticateSPResult().getValue() );
     }
@@ -69,9 +60,7 @@ public class AuthenticateApi {
     public AuthenticateResponse incrementalVerification(@NonNull String authenticationId, @NonNull String customerReference, @NonNull InputData inputData, @NonNull ProfileVersion profileVersion){
         IncrementalVerification incrementalVerification = buildIncrementalVerification(authenticationId, customerReference, inputData, profileVersion);
 
-        IncrementalVerificationResponse incrementalVerificationResponse = (IncrementalVerificationResponse) webServiceTemplate
-                .marshalSendAndReceive(accessCredentials.getApiUrl(),
-                        incrementalVerification, INCREMENTAL_VERIFICATION_CALLBACK);
+        IncrementalVerificationResponse incrementalVerificationResponse = (IncrementalVerificationResponse) marshalSendAndReceive(incrementalVerification, INCREMENTAL_VERIFICATION_CALLBACK);
 
         return AuthenticateResponse.from( incrementalVerificationResponse.getIncrementalVerificationResult().getValue() );
     }
@@ -116,5 +105,6 @@ public class AuthenticateApi {
 
         return incrementalVerification;
     }
+
 
 }

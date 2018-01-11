@@ -1,7 +1,9 @@
 package com.lindar.id3global.vo;
 
+import com.lindar.id3global.SoapUtils;
 import com.lindar.id3global.internal.vo.ArrayOfGlobalItemCheckResultCode;
 import com.lindar.id3global.internal.vo.GlobalItemCheckResultCodes;
+import com.lindar.id3global.internal.vo.GlobalSanctionsResultCodes;
 import lombok.Data;
 
 import java.util.Collections;
@@ -27,31 +29,37 @@ public class ItemCheckResultCodes {
     protected String country;
 
 
-    public static ItemCheckResultCodes from (GlobalItemCheckResultCodes from){
+    public static ItemCheckResultCodes from (GlobalItemCheckResultCodes value){
 
-        ItemCheckResultCodes resultCodes = new ItemCheckResultCodes();
+        // process specific result codes
+        if(value instanceof GlobalSanctionsResultCodes){
+            return SanctionsResultCodes.from((GlobalSanctionsResultCodes)value);
+        }
 
-        if(from.getName() != null) resultCodes.setName(from.getName().getValue());
-        if(from.getDescription() != null) resultCodes.setDescription(from.getDescription().getValue());
-
-        if(from.getComment() != null) resultCodes.setComment(transformToItemList(from.getComment().getValue()));
-        if(from.getMatch() != null) resultCodes.setMatch(transformToItemList(from.getMatch().getValue()));
-        if(from.getWarning() != null) resultCodes.setComment(transformToItemList(from.getWarning().getValue()));
-        if(from.getMismatch() != null) resultCodes.setMismatch(transformToItemList(from.getMismatch().getValue()));
-
-        resultCodes.setId(from.getID());
-        resultCodes.setPass(MatchEnum.from(from.getPass()));
-        resultCodes.setAddress(MatchEnum.from(from.getAddress()));
-        resultCodes.setForename(MatchEnum.from(from.getForename()));
-        resultCodes.setSurname(MatchEnum.from(from.getSurname()));
-        resultCodes.setDob(MatchEnum.from(from.getDOB()));
-        resultCodes.setAlert(MatchEnum.from(from.getAlert()));
-
-        if(from.getCountry() != null) resultCodes.setCountry(from.getCountry().getValue());
-        return resultCodes;
+        // no specific result code found, procsss as default
+        ItemCheckResultCodes result = new ItemCheckResultCodes();
+        populate(value, result);
+        return result;
     }
 
-    private static List<ItemCheckResultCode> transformToItemList(ArrayOfGlobalItemCheckResultCode from){
+    protected static void populate (GlobalItemCheckResultCodes value, ItemCheckResultCodes result){
+        SoapUtils.populate(value.getName(), result::setName);
+        SoapUtils.populate(value.getDescription(), result::setDescription);
+        SoapUtils.populate(value.getComment(), ItemCheckResultCodes::transformToList, result::setComment);
+        SoapUtils.populate(value.getMatch(), ItemCheckResultCodes::transformToList, result::setMatch);
+        SoapUtils.populate(value.getWarning(), ItemCheckResultCodes::transformToList, result::setWarning);
+        SoapUtils.populate(value.getMismatch(), ItemCheckResultCodes::transformToList, result::setMismatch);
+        result.setId(value.getID());
+        SoapUtils.populate(value.getPass(), MatchEnum::from,result::setPass);
+        SoapUtils.populate(value.getAddress(), MatchEnum::from,result::setAddress);
+        SoapUtils.populate(value.getForename(), MatchEnum::from,result::setForename);
+        SoapUtils.populate(value.getSurname(), MatchEnum::from, result::setSurname);
+        SoapUtils.populate(value.getDOB(), MatchEnum::from, result::setDob);
+        SoapUtils.populate(value.getAlert(), MatchEnum::from, result::setAddress);
+        SoapUtils.populate(value.getCountry(), result::setCountry);
+    }
+
+    protected static List<ItemCheckResultCode> transformToList(ArrayOfGlobalItemCheckResultCode from){
         return from.getGlobalItemCheckResultCode().stream().map(ItemCheckResultCode::from).collect(Collectors.toList());
     }
 }

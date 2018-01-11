@@ -1,5 +1,6 @@
 package com.lindar.id3global;
 
+import com.lindar.id3global.internal.vo.GlobalGender;
 import com.lindar.id3global.vo.*;
 import com.lindar.id3global.vo.identity_documents.uk.UKDrivingLicence;
 import com.lindar.id3global.vo.identity_documents.uk.UKIndentityDocuments;
@@ -9,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ID3GlobalClientTest {
+public class AuthenticationApiTest {
 
     private ID3GlobalClient client;
 
@@ -20,7 +21,8 @@ public class ID3GlobalClientTest {
                 System.getenv("id3global-username"),
                 System.getenv("id3global-password"),
                 System.getenv("id3global-default-profile-id"),
-                Integer.valueOf(System.getenv("id3global-default-profile-version"))
+                Integer.valueOf(System.getenv("id3global-default-profile-version")),
+                System.getenv("id3global-default-org-id")
         );
 
         SSLUtilities.trustAllHostnames();
@@ -35,27 +37,34 @@ public class ID3GlobalClientTest {
                                 .email("KyleAshton@armyspy.com")
                                 .mobileNumber("07041357509")
                                 .build())
-                .currentAddress(
-                        Address.builder()
-                                .addressLine1("32 Londesborough Rd")
-                                //.addressLine2("")
-                                .addressLine3("Scarborough")
-                                .addressLine4("North Yorkshire")
-                                .zipPostcode("YO12 5AF")
-                                .country("united kingdom")
-                                .build())
-                .personalDetails(
-                        PersonalDetails.builder()
-                                .title("mr")
-                                .forename("Kyle")
-                                .surname("Ashton")
-                                .dobDay(7)
-                                .dobMonth(4)
-                                .dobYear(1984)
-                                .gender(Gender.MALE)
-                                .build()
-                )
+                .addresses(Addresses.builder()
+                                   .currentAddress(
+                                           Address.builder()
+                                                   .addressLine1("32 Londesborough Rd")
+                                                   //.addressLine2("")
+                                                   .addressLine3("Scarborough")
+                                                   .addressLine4("North Yorkshire")
+                                                   .zipPostcode("YO12 5AF")
+                                                   .country("united kingdom")
+                                                   .build()
+                                   )
+                                   .build())
 
+                .personal(
+                        Personal.builder()
+                        .personalDetails(
+                                PersonalDetails.builder()
+                                        .title("mr")
+                                        .forename("Kyle")
+                                        .surname("Ashton")
+                                        .dobDay(7)
+                                        .dobMonth(4)
+                                        .dobYear(1984)
+                                        .gender(GlobalGender.MALE)
+                                        .build()
+                        )
+                        .build()
+                )
                 .identityDocuments(
                         IdentityDocuments.builder()
                                 .uk(UKIndentityDocuments.builder()
@@ -87,24 +96,32 @@ public class ID3GlobalClientTest {
                                 .email("KyleAshton@armyspy.com")
                                 .mobileNumber("07041357509")
                                 .build())
-                .currentAddress(
-                        Address.builder()
-                                .addressLine1("32 Londesborough Rd")
-                                //.addressLine2("")
-                                .addressLine3("Scarborough")
-                                .addressLine4("North Yorkshire")
-                                .zipPostcode("YO12 5AF")
-                                .country("united kingdom")
-                                .build())
-                .personalDetails(
-                        PersonalDetails.builder()
-                                .title("mr")
-                                .forename("Kyle")
-                                .surname("Ashton")
-                                .dobDay(7)
-                                .dobMonth(4)
-                                .dobYear(1984)
-                                .gender(Gender.MALE)
+                .addresses(Addresses.builder()
+                                   .currentAddress(
+                                           Address.builder()
+                                                   .addressLine1("32 Londesborough Rd")
+                                                   //.addressLine2("")
+                                                   .addressLine3("Scarborough")
+                                                   .addressLine4("North Yorkshire")
+                                                   .zipPostcode("YO12 5AF")
+                                                   .country("united kingdom")
+                                                   .build()
+                                   )
+                                   .build())
+
+                .personal(
+                        Personal.builder()
+                                .personalDetails(
+                                        PersonalDetails.builder()
+                                                .title("mr")
+                                                .forename("Kyle")
+                                                .surname("Ashton")
+                                                .dobDay(7)
+                                                .dobMonth(4)
+                                                .dobYear(1984)
+                                                .gender(GlobalGender.MALE)
+                                                .build()
+                                )
                                 .build()
                 );
 
@@ -112,6 +129,8 @@ public class ID3GlobalClientTest {
 
 
         AuthenticateResponse singleAuthenticate = client.authenticate().singleAuthenticate("customer-ref", missingInputData);
+
+        Assert.assertTrue("Profile must have a breakpoint", singleAuthenticate.getUserBreakpoint() != null);
 
         InputData completeInputData = inputDataBuilder.identityDocuments(
                 IdentityDocuments.builder()
