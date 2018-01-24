@@ -154,4 +154,31 @@ public class AuthenticationApiTest {
 
         Assert.assertTrue(response.getBandText() != null);
     }
+
+    @Test
+    public void testSingleAuthenticationPepSanction() {
+        InputData inputData = InputData.builder()
+                .personal(
+                        Personal.builder()
+                                .personalDetails(
+                                        PersonalDetails.builder()
+                                                .title("mr")
+                                                .forename("David")
+                                                .surname("Cameron")
+                                                .dobDay(9)
+                                                .dobMonth(10)
+                                                .dobYear(1966)
+                                                .gender(GlobalGender.MALE)
+                                                .build()
+                                )
+                                .build()
+                )
+
+
+                .build();
+
+        AuthenticateResponse response = client.authenticate().singleAuthenticate("sanction-test", inputData);
+
+        Assert.assertTrue(response.getBandText() != null);
+    }
 }

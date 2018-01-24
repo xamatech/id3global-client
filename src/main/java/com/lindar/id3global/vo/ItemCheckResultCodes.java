@@ -55,7 +55,7 @@ public class ItemCheckResultCodes {
         SoapUtils.populate(value.getForename(), MatchEnum::from,result::setForename);
         SoapUtils.populate(value.getSurname(), MatchEnum::from, result::setSurname);
         SoapUtils.populate(value.getDOB(), MatchEnum::from, result::setDob);
-        SoapUtils.populate(value.getAlert(), MatchEnum::from, result::setAddress);
+        SoapUtils.populate(value.getAlert(), MatchEnum::from, result::setAlert);
         SoapUtils.populate(value.getCountry(), result::setCountry);
     }
 

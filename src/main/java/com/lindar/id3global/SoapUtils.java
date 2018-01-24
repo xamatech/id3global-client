@@ -35,6 +35,12 @@ public class SoapUtils {
         consumer.accept(mapper.apply(element));
     }
 
+    public static void populate(XMLGregorianCalendar element, Consumer<Date> consumer){
+        if(element == null) return;
+
+        consumer.accept(element.toGregorianCalendar().getTime());
+    }
+
     public static Date mapDate(XMLGregorianCalendar date){
         return date.toGregorianCalendar().getTime();
     }
