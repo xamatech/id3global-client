@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class Authentication {
+public class AuthenticationSummary {
     private String authenticationID;
     private String chainID;
     private Date timestamp;
@@ -25,8 +25,8 @@ public class Authentication {
     private Boolean helpdeskAccess;
     private Boolean multipleProfile;
 
-    public static Authentication from(GlobalAuthentication value){
-        Authentication result = new Authentication();
+    public static AuthenticationSummary from(GlobalAuthentication value){
+        AuthenticationSummary result = new AuthenticationSummary();
 
         SoapUtils.populate(value::getAuthenticationID, result::setAuthenticationID);
         SoapUtils.populate(value.getChainID(), result::setChainID);

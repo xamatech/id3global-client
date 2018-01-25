@@ -4,27 +4,16 @@ import com.lindar.id3global.internal.vo.ArrayOfGlobalItemCheckResultCodes;
 import com.lindar.id3global.internal.vo.GlobalResultData;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-public class AuthenticateResponse {
+public class AuthenticateResponse extends AuthenticationSummary {
 
-    private String authenticationID;
-    private Date timestamp;
-    private String customerRef;
-    private String profileID;
-    private String profileName;
-    private Long profileVersion;
-    private Long profileRevision;
-    private Integer score;
-    private String bandText;
+
     private Long userBreakpoint;
     private Boolean noRetry;
-    private String chainID;
     private String country;
-
     protected List<ItemCheckResultCodes> resultCodes;
 
 

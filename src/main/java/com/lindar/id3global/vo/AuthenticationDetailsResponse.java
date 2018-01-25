@@ -6,36 +6,20 @@ import com.lindar.id3global.internal.vo.GlobalProfileState;
 import com.lindar.id3global.vo.requests.InputData;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-public class AuthenticationDetailsResponse {
+public class AuthenticationDetailsResponse extends AuthenticateResponse {
 
-    private String authenticationID;
-    private String chainID;
-    private Date timestamp;
-    private String customerRef;
     private String orgID;
     private String accountID;
-    private Integer score;
-    private String bandText;
-    private String profileID;
-    private String profileName;
-    private Long profileVersion;
-    private Long profileRevision;
     private GlobalProfileState profileState;
-    private Boolean helpdeskAccess;
-    private Boolean isMultipleProfile;
 
     private InputData inputData;
-    private List<ItemCheckResultCodes> resultCodes;
     private String name;
     private String username;
     private String domainName;
-    private Long userBreakpoint;
-    private Boolean noRetry;
 
     public static AuthenticationDetailsResponse from(GlobalAuthenticationDetails value){
         AuthenticationDetailsResponse result = new AuthenticationDetailsResponse();
@@ -54,7 +38,7 @@ public class AuthenticationDetailsResponse {
         if(value.getProfileRevision() != null) result.setProfileRevision(value.getProfileRevision());
         if(value.getProfileState() != null) result.setProfileState(value.getProfileState());
         if(value.isHelpdeskAccess() != null) result.setHelpdeskAccess(value.isHelpdeskAccess());
-        if(value.isIsMultipleProfile() != null) result.setIsMultipleProfile(value.isIsMultipleProfile());
+        if(value.isIsMultipleProfile() != null) result.setMultipleProfile(value.isIsMultipleProfile());
         if(value.getName() != null) result.setName(value.getName().getValue());
         if(value.getUsername() != null) result.setUsername(value.getUsername().getValue());
         if(value.getDomainName() != null) result.setDomainName(value.getDomainName().getValue());

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class Authentications {
-    private List<Authentication> authentications;
+    private List<AuthenticationSummary> authentications;
     private long pageSize;
     private long totalPages;
     private long totalAuthentications;
@@ -24,7 +24,7 @@ public class Authentications {
         return result;
     }
 
-    private static List<Authentication> transformAuthenticationList(ArrayOfGlobalAuthentication from){
-        return from.getGlobalAuthentication().stream().map(Authentication::from).collect(Collectors.toList());
+    private static List<AuthenticationSummary> transformAuthenticationList(ArrayOfGlobalAuthentication from){
+        return from.getGlobalAuthentication().stream().map(AuthenticationSummary::from).collect(Collectors.toList());
     }
 }
