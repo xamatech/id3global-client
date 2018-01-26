@@ -6,7 +6,7 @@
 
     <groupId>com.lindar</groupId>
     <artifactId>id3global-client</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 
     <name>id3global Client</name>
     <description>Client for dealing with KYC on id3global</description>
