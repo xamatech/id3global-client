@@ -1,12 +1,10 @@
 package com.lindar.id3global.api;
 
-import com.lindar.id3global.internal.callbacks.DelegatingWebServiceMessageCallback;
-import com.lindar.id3global.internal.callbacks.WSSESecurityHeaderRequestWebServiceMessageCallback;
-import com.lindar.id3global.internal.vo.*;
+
 import com.lindar.id3global.vo.AccessCredentials;
-import com.lindar.id3global.vo.AuthenticateResponse;
-import com.lindar.id3global.vo.ProfileVersion;
-import com.lindar.id3global.vo.requests.InputData;
+import com.lindar.id3global.schema.*;
+import com.lindar.id3global.support.DelegatingWebServiceMessageCallback;
+import com.lindar.id3global.support.WSSESecurityHeaderRequestWebServiceMessageCallback;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
@@ -15,7 +13,6 @@ import org.springframework.ws.soap.client.core.SoapActionCallback;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AuthenticateApi extends BaseApi {
 
@@ -37,74 +34,45 @@ public class AuthenticateApi extends BaseApi {
         this.INCREMENTAL_VERIFICATION_CALLBACK =  new DelegatingWebServiceMessageCallback(Arrays.asList(authenticationCallback, new SoapActionCallback(INCREMENTAL_VERIFICATION_ACTION)));
     }
 
-    public List<AuthenticateResponse> multiAuthenticate(@NonNull String customerReference, @NonNull InputData inputData, @NonNull List<ProfileVersion> profileVersions){
-        AuthenticateMP authenticateMP = buildAuthenticateMP(customerReference, inputData, profileVersions);
-
-        AuthenticateMPResponse authenticateMPResponse = (AuthenticateMPResponse) marshalSendAndReceive(authenticateMP, AUTHENTICATE_MP_CALLBACK);
-
-        return authenticateMPResponse.getAuthenticateMPResult().getValue().getGlobalResultData().stream().map(AuthenticateResponse::from).collect(Collectors.toList());
-    }
-
-    public AuthenticateResponse singleAuthenticate(@NonNull String customerReference, @NonNull InputData inputData, @NonNull ProfileVersion profileVersion){
-        AuthenticateSP authenticateSP = buildAuthenticateSP(customerReference, inputData, profileVersion);
-
-        AuthenticateSPResponse authenticateSPResponse = (AuthenticateSPResponse) marshalSendAndReceive(authenticateSP, AUTHENTICATE_SP_CALLBACK);
-
-        return AuthenticateResponse.from( authenticateSPResponse.getAuthenticateSPResult().getValue() );
-    }
-
-    public AuthenticateResponse singleAuthenticate(String customerReference, InputData inputData){
-        return singleAuthenticate(customerReference, inputData, new ProfileVersion(accessCredentials.getProfileId(), accessCredentials.getProfileVersion()));
-    }
-
-    public AuthenticateResponse incrementalVerification(@NonNull String authenticationId, @NonNull String customerReference, @NonNull InputData inputData, @NonNull ProfileVersion profileVersion){
-        IncrementalVerification incrementalVerification = buildIncrementalVerification(authenticationId, customerReference, inputData, profileVersion);
-
-        IncrementalVerificationResponse incrementalVerificationResponse = (IncrementalVerificationResponse) marshalSendAndReceive(incrementalVerification, INCREMENTAL_VERIFICATION_CALLBACK);
-
-        return AuthenticateResponse.from( incrementalVerificationResponse.getIncrementalVerificationResult().getValue() );
-    }
-
-    public AuthenticateResponse incrementalVerification(String authenticationId, String customerReference, InputData inputData){
-        return incrementalVerification(authenticationId, customerReference, inputData, new ProfileVersion(accessCredentials.getProfileId(), accessCredentials.getProfileVersion()));
-    }
-
-    private AuthenticateMP buildAuthenticateMP(String customerReference, InputData inputData, List<ProfileVersion> profileVersions){
-        AuthenticateMP authenticateMP = factory.createAuthenticateMP();
+    public List<GlobalResultData> multiAuthenticate(@NonNull String customerReference, @NonNull GlobalInputData inputData, @NonNull List<GlobalProfileIDVersion> profileVersions){
+        AuthenticateMP authenticateMP = new AuthenticateMP();
 
         if(profileVersions != null && !profileVersions.isEmpty()) {
-            ArrayOfGlobalProfileIDVersion arrayOfGlobalProfileIDVersion = factory.createArrayOfGlobalProfileIDVersion();
-            List<GlobalProfileIDVersion> convertedProfiles = profileVersions.stream().map(ProfileVersion::toSoap).collect(Collectors.toList());
-            arrayOfGlobalProfileIDVersion.getGlobalProfileIDVersion().addAll(convertedProfiles);
-            authenticateMP.setProfileIDVersions(factory.createArrayOfGlobalProfileIDVersion(arrayOfGlobalProfileIDVersion));
+            authenticateMP.setProfileIDVersions(profileVersions);
         }
 
-        if(StringUtils.isNotBlank(customerReference)) authenticateMP.setCustomerReference(factory.createAuthenticateSPCustomerReference(customerReference));
-        if(inputData != null) authenticateMP.setInputData(factory.createAuthenticateSPInputData(inputData.toSoap()));
+        if(StringUtils.isNotBlank(customerReference)) authenticateMP.setCustomerReference(customerReference);
+        if(inputData != null) authenticateMP.setInputData(inputData);
 
-        return authenticateMP;
+        return ((AuthenticateMPResponse) marshalSendAndReceive(authenticateMP, AUTHENTICATE_MP_CALLBACK)).getAuthenticateMPResult();
     }
 
-    private AuthenticateSP buildAuthenticateSP(String customerReference, InputData inputData, ProfileVersion profileVersion){
-        AuthenticateSP authenticateSP = factory.createAuthenticateSP();
+    public GlobalResultData singleAuthenticate(@NonNull String customerReference, @NonNull GlobalInputData inputData, @NonNull GlobalProfileIDVersion profileVersion){
+        AuthenticateSP authenticateSP = new AuthenticateSP();
 
-        if(profileVersion != null) authenticateSP.setProfileIDVersion(factory.createAuthenticateSPProfileIDVersion(profileVersion.toSoap()));
-        if(StringUtils.isNotBlank(customerReference)) authenticateSP.setCustomerReference(factory.createAuthenticateSPCustomerReference(customerReference));
-        if(inputData != null) authenticateSP.setInputData(factory.createAuthenticateSPInputData(inputData.toSoap()));
+        if(profileVersion != null) authenticateSP.setProfileIDVersion(profileVersion);
+        if(StringUtils.isNotBlank(customerReference)) authenticateSP.setCustomerReference(customerReference);
+        if(inputData != null) authenticateSP.setInputData(inputData);
 
-        return authenticateSP;
+        return ((AuthenticateSPResponse) marshalSendAndReceive(authenticateSP, AUTHENTICATE_SP_CALLBACK)).getAuthenticateSPResult();
     }
 
-    private IncrementalVerification buildIncrementalVerification(String authenticationId, String customerReference, InputData inputData, ProfileVersion profileVersion){
-        IncrementalVerification incrementalVerification = factory.createIncrementalVerification();
+    public GlobalResultData singleAuthenticate(String customerReference, GlobalInputData inputData){
+        return singleAuthenticate(customerReference, inputData, defaultProfileVersion);
+    }
+
+    public GlobalResultData incrementalVerification(@NonNull String authenticationId, @NonNull String customerReference, @NonNull GlobalInputData inputData, @NonNull GlobalProfileIDVersion profileVersion){
+        IncrementalVerification incrementalVerification = new IncrementalVerification();
 
         if(StringUtils.isNotBlank(authenticationId)) incrementalVerification.setAuthenticationID(authenticationId);
-        if(profileVersion != null) incrementalVerification.setProfileIDVersion(factory.createIncrementalVerificationProfileIDVersion(profileVersion.toSoap()));
-        if(StringUtils.isNotBlank(customerReference)) incrementalVerification.setCustomerReference(factory.createIncrementalVerificationCustomerReference(customerReference));
-        if(inputData != null) incrementalVerification.setInputData(factory.createIncrementalVerificationInputData(inputData.toSoap()));
+        if(profileVersion != null) incrementalVerification.setProfileIDVersion(profileVersion);
+        if(StringUtils.isNotBlank(customerReference)) incrementalVerification.setCustomerReference(customerReference);
+        if(inputData != null) incrementalVerification.setInputData(inputData);
 
-        return incrementalVerification;
+        return ((IncrementalVerificationResponse) marshalSendAndReceive(incrementalVerification, INCREMENTAL_VERIFICATION_CALLBACK)).getIncrementalVerificationResult();
     }
 
-
+    public GlobalResultData incrementalVerification(String authenticationId, String customerReference, GlobalInputData inputData){
+        return incrementalVerification(authenticationId, customerReference, inputData, defaultProfileVersion);
+    }
 }

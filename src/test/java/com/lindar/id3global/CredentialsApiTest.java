@@ -1,6 +1,6 @@
 package com.lindar.id3global;
 
-import com.lindar.id3global.vo.Account;
+import com.lindar.id3global.schema.GlobalAccount;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,13 +20,11 @@ public class CredentialsApiTest {
                 System.getenv("id3global-default-org-id")
         );
 
-        SSLUtilities.trustAllHostnames();
-        SSLUtilities.trustAllHttpsCertificates();
     }
 
     @Test
     public void testCheckCredentials() {
-        Account account = client.credentials().checkCredentials();
+        GlobalAccount account = client.credentials().checkCredentials();
         Assert.assertTrue(account.getOrgID() != null);
     }
 }

@@ -3,19 +3,18 @@ package com.lindar.id3global;
 import com.lindar.id3global.api.AuthenticateApi;
 import com.lindar.id3global.api.CredentialsApi;
 import com.lindar.id3global.api.SearchApi;
-import com.lindar.id3global.internal.callbacks.WSSESecurityHeaderRequestWebServiceMessageCallback;
+import com.lindar.id3global.support.WSSESecurityHeaderRequestWebServiceMessageCallback;
 import com.lindar.id3global.vo.AccessCredentials;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 public class ID3GlobalClient {
 
-    private static final String CONTEXT_PATH = "com.lindar.id3global.internal.vo";
+    private static final String CONTEXT_PATH = "com.lindar.id3global.schema";
 
     private final AuthenticateApi authenticateApi;
     private final SearchApi searchApi;
     private final CredentialsApi credentialsApi;
-
 
     private ID3GlobalClient(AccessCredentials accessCredentials){
         WSSESecurityHeaderRequestWebServiceMessageCallback authenticationCallback = new WSSESecurityHeaderRequestWebServiceMessageCallback(accessCredentials.getUsername(), accessCredentials.getPassword());

@@ -1,9 +1,10 @@
 package com.lindar.id3global.api;
 
-import com.lindar.id3global.internal.callbacks.DelegatingWebServiceMessageCallback;
-import com.lindar.id3global.internal.vo.*;
+import com.lindar.id3global.schema.GlobalAccount;
 import com.lindar.id3global.vo.AccessCredentials;
-import com.lindar.id3global.vo.Account;
+import com.lindar.id3global.schema.CheckCredentials;
+import com.lindar.id3global.schema.CheckCredentialsResponse;
+import com.lindar.id3global.support.DelegatingWebServiceMessageCallback;
 import lombok.NonNull;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -25,24 +26,16 @@ public class CredentialsApi extends BaseApi {
         this.CHECK_CREDENTIALS_CALLBACK =  new DelegatingWebServiceMessageCallback(Collections.singletonList(new SoapActionCallback(CHECK_CREDENTIALS_ACTION)));
     }
 
-    public Account checkCredentials() {
+    public GlobalAccount checkCredentials() {
         return checkCredentials(accessCredentials.getUsername(), accessCredentials.getPassword());
     }
 
-    public Account checkCredentials(@NonNull String username, @NonNull String password){
-        CheckCredentials request = buildCheckCredentials(username, password);
-        CheckCredentialsResponse response = (CheckCredentialsResponse) marshalSendAndReceive(request, CHECK_CREDENTIALS_CALLBACK);
+    public GlobalAccount checkCredentials(@NonNull String username, @NonNull String password){
+        CheckCredentials request = new CheckCredentials();
+        request.setAccountName(username);
+        request.setPassword(password);
 
-        GlobalAccount value = response.getCheckCredentialsResult().getValue();
-
-        return Account.from(value);
-    }
-
-    private CheckCredentials buildCheckCredentials(String username, String password){
-        CheckCredentials request = factory.createCheckCredentials();
-        request.setAccountName(factory.createCheckCredentialsAccountName(username));
-        request.setPassword(factory.createCheckCredentialsPassword(password));
-        return request;
+        return ((CheckCredentialsResponse) marshalSendAndReceive(request, CHECK_CREDENTIALS_CALLBACK)).getCheckCredentialsResult();
     }
 
 }
