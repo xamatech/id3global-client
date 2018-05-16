@@ -1,11 +1,15 @@
 package com.lindar.id3global;
 
-import com.lindar.id3global.schema.*;
+import com.lindar.id3global.schema.GlobalContactDetails;
+import com.lindar.id3global.schema.GlobalInputData;
+import com.lindar.id3global.schema.GlobalPersonal;
+import com.lindar.id3global.schema.GlobalPersonalDetails;
+import com.lindar.id3global.schema.GlobalResultData;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
+@Ignore
 public class AuthenticateApiTest {
 
     private ID3GlobalClient client;

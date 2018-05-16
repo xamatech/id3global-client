@@ -7,10 +7,12 @@ import com.lindar.id3global.schema.GlobalAuthentications;
 import com.lindar.id3global.schema.GlobalPEPIntelligenceData;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 
+@Ignore
 public class SearchApiTest {
 
     private ID3GlobalClient client;

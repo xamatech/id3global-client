@@ -3,8 +3,10 @@ package com.lindar.id3global;
 import com.lindar.id3global.schema.GlobalAccount;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class CredentialsApiTest {
 
     private ID3GlobalClient client;
