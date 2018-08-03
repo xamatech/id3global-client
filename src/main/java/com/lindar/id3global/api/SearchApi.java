@@ -65,8 +65,8 @@ public class SearchApi extends BaseApi {
     public GlobalAuthentications getAuthentications(ZonedDateTime startDate, ZonedDateTime endDate, AuthenticationsSearchType searchType, String searchValue, long page, long pageSize, AuthenticationsSortType sortType, boolean descendingOrder, String orgId){
 
         GetAuthentications request = new GetAuthentications();
-        request.setStartDate(startDate);
-        request.setEndDate(endDate);
+        request.setStartDate(startDate.toInstant());
+        request.setEndDate(endDate.toInstant());
         request.setSearchType(searchType.getValue());
         request.setSearchValue(searchValue);
         request.setPage(page);

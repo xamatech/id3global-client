@@ -14,8 +14,8 @@
 				 <xjc:javaType adapter="com.lindar.id3global.adapter.LocalDateAdapter"
 								name="java.time.LocalDate" xmlType="xs:date" />
 
-				 <xjc:javaType adapter="com.lindar.id3global.adapter.ZonedDateTimeAdapter"
-							   name="java.time.ZonedDateTime" xmlType="xs:dateTime"/>
+				 <xjc:javaType adapter="com.lindar.id3global.adapter.InstantDateTimeAdapter"
+							   name="java.time.Instant" xmlType="xs:dateTime"/>
 
 			 </jaxb:globalBindings>
 
