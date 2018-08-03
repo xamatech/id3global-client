@@ -11,6 +11,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 @Ignore
 public class SearchApiTest {
@@ -27,7 +29,6 @@ public class SearchApiTest {
                 Integer.valueOf(System.getenv("id3global-default-profile-version")),
                 System.getenv("id3global-default-org-id")
         );
-
     }
 
     @Test
@@ -45,10 +46,10 @@ public class SearchApiTest {
     @Test
     public void testGetAuthentications() {
         GlobalAuthentications response = client.search().getAuthentications(
-                LocalDateTime.now().minusDays(30),
-                LocalDateTime.now(),
+                ZonedDateTime.now(ZoneOffset.UTC).minusDays(30),
+                ZonedDateTime.now(ZoneOffset.UTC),
                 AuthenticationsSearchType.CUSTOMER_REFERENCE,
-                "pep-test",
+                "steven-test-ref",
                 1, 100,
                 AuthenticationsSortType.TIMESTAMP, true
         );

@@ -1,18 +1,18 @@
 package com.lindar.id3global.api;
 
-import com.lindar.id3global.vo.AccessCredentials;
 import com.lindar.id3global.enums.AuthenticationsSearchType;
 import com.lindar.id3global.enums.AuthenticationsSortType;
 import com.lindar.id3global.schema.*;
 import com.lindar.id3global.support.DelegatingWebServiceMessageCallback;
 import com.lindar.id3global.support.WSSESecurityHeaderRequestWebServiceMessageCallback;
+import com.lindar.id3global.vo.AccessCredentials;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 
 public class SearchApi extends BaseApi {
@@ -58,11 +58,11 @@ public class SearchApi extends BaseApi {
         return ((GetPEPIntelligenceDataResponse) marshalSendAndReceive(request, PEP_INTELLIGENCE_DATA_CALLBACK)).getGetPEPIntelligenceDataResult();
     }
 
-    public GlobalAuthentications getAuthentications(LocalDateTime startDate, LocalDateTime endDate, AuthenticationsSearchType searchType, String searchValue, long page, long pageSize, AuthenticationsSortType sortType, boolean descendingOrder) {
+    public GlobalAuthentications getAuthentications(ZonedDateTime startDate, ZonedDateTime endDate, AuthenticationsSearchType searchType, String searchValue, long page, long pageSize, AuthenticationsSortType sortType, boolean descendingOrder) {
         return getAuthentications(startDate, endDate, searchType, searchValue, page, pageSize, sortType, descendingOrder, accessCredentials.getOrgId());
     }
 
-    public GlobalAuthentications getAuthentications(LocalDateTime startDate, LocalDateTime endDate, AuthenticationsSearchType searchType, String searchValue, long page, long pageSize, AuthenticationsSortType sortType, boolean descendingOrder, String orgId){
+    public GlobalAuthentications getAuthentications(ZonedDateTime startDate, ZonedDateTime endDate, AuthenticationsSearchType searchType, String searchValue, long page, long pageSize, AuthenticationsSortType sortType, boolean descendingOrder, String orgId){
 
         GetAuthentications request = new GetAuthentications();
         request.setStartDate(startDate);
@@ -75,7 +75,7 @@ public class SearchApi extends BaseApi {
         request.setDescendingOrder(descendingOrder);
         request.setOrgID(orgId);
 
-        return ((GetAuthenticationsResponse) marshalSendAndReceive(request, AUTHENTICATIONS_CALLBACK)).getGetAuthenticationsResult();
+        GetAuthenticationsResponse getAuthenticationsResponse = (GetAuthenticationsResponse) marshalSendAndReceive(request, AUTHENTICATIONS_CALLBACK);
+        return getAuthenticationsResponse.getGetAuthenticationsResult();
     }
-
 }
