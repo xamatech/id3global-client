@@ -19,34 +19,5 @@
 
 			 </jaxb:globalBindings>
 
-	<jaxb:bindings schemaLocation="ID3global-xsd0.xml">
-	    <jaxb:schemaBindings>
-	        <jaxb:package name="com.lindar.id3global.schema"/>
 
-	    </jaxb:schemaBindings>
-	</jaxb:bindings>
-	<jaxb:bindings schemaLocation="ID3global-xsd1.xml">
-	    <jaxb:schemaBindings>
-	        <jaxb:package name="com.lindar.id3global.schema.serialization"/>
-
-	    </jaxb:schemaBindings>
-	</jaxb:bindings>
-	<jaxb:bindings schemaLocation="ID3global-xsd2.xml">
-	    <jaxb:schemaBindings>
-	        <jaxb:package name="com.lindar.id3global.schema.serialization.arrays"/>
-
-	    </jaxb:schemaBindings>
-	</jaxb:bindings>
-	<jaxb:bindings schemaLocation="ID3global-xsd3.xml">
-	    <jaxb:schemaBindings>
-	        <jaxb:package name="com.lindar.id3global.schema.message"/>
-
-	    </jaxb:schemaBindings>
-	</jaxb:bindings>
-	<jaxb:bindings schemaLocation="ID3global-xsd4.xml">
-	    <jaxb:schemaBindings>
-	        <jaxb:package name="com.lindar.id3global.schema.globalcheck.datalib"/>
-
-	    </jaxb:schemaBindings>
-	</jaxb:bindings>
 </jaxb:bindings>
