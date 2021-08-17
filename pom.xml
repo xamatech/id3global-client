@@ -4,7 +4,7 @@
 
 	<groupId>com.lindar</groupId>
 	<artifactId>id3global-client</artifactId>
-	<version>1.1.2-SNAPSHOT</version>
+	<version>1.1.2</version>
 	<packaging>jar</packaging>
 
 	<name>id3global Client</name>
@@ -167,6 +167,11 @@
                     <releaseProfiles>releases</releaseProfiles>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.0.0-M1</version>
+			</plugin>
 		</plugins>
 	</build>
 
