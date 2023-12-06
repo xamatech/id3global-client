@@ -6,7 +6,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
-import javax.xml.soap.*;
+import jakarta.xml.soap.*;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 

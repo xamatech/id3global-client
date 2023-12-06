@@ -1,7 +1,7 @@
 package com.lindar.id3global.adapter;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.time.LocalDate;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
+
 import java.time.LocalDateTime;
 
 public class LocalDateTimeAdapter extends XmlAdapter<String,LocalDateTime> {
