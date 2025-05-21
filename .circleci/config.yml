@@ -1,0 +1,69 @@
+restore_workspace: &restore_workspace
+  attach_workspace:
+    at: .
+
+save_workspace: &save_workspace
+  persist_to_workspace:
+    root: .
+    paths:
+    - .
+
+version: 2
+
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+    - build:
+        filters:
+          tags:
+            only: /.*/
+    - test:
+        requires:
+        - build
+        filters:
+          tags:
+            only: /.*/
+    - deploy:
+        requires:
+        - build
+        - test
+        filters:
+          branches:
+            ignore: /.*/
+          tags:
+            only: /^x[0-9]+(\.[0-9]+)*/
+
+jobs:
+  build:
+    docker:
+    - image: cimg/openjdk:21.0.6
+    steps:
+    - checkout
+    - run:
+        name: build application
+        command: make build
+    - *save_workspace
+
+  test:
+    docker:
+    - image: cimg/openjdk:21.0.6
+    parallelism: 1
+    steps:
+    - checkout
+    - *restore_workspace
+    - run:
+        name: test application
+        command: make test
+
+  deploy:
+    docker:
+    - image: cimg/openjdk:21.0.6
+    steps:
+    - checkout
+    - *restore_workspace
+    - setup_remote_docker:
+        docker_layer_caching: false
+    - run:
+        name: deploy artifact to private repository
+        command: make deploy
