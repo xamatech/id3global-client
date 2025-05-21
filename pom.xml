@@ -213,4 +213,11 @@
         </profile>
     </profiles>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/xamatech/id3global-client</url>
+        </repository>
+    </distributionManagement>
 </project>
